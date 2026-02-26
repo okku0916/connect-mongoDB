@@ -24,6 +24,21 @@ async function main() {
 		res.render(path.join(__dirname, 'views','index.ejs'), { users: names });
 	});
 
+	app.post('/api/user' , express .json(), async (req, res) =>
+		{
+			const name = req.body.name;
+			if (!name) {
+				res.status (400).send('Bad Request' );
+				return ;
+			}
+			if (typeof name !== 'string') {
+				res.status(400).send('Not String');
+				return;
+			}
+			await db.collection ('user' ).insertOne ({ name : name });
+			res.status (200).send('Created' );
+		});
+
 	app.listen(3000, () => {
 		console.log('start listening' );
 	});
