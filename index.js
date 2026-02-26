@@ -4,6 +4,7 @@ const path = require('path');
 const { MongoClient } = require('mongodb' );
 const client = new
 	MongoClient ('mongodb://localhost:27017' );
+const { insertUser } = require('./user.js');
 
 const app = express();
 
@@ -27,16 +28,8 @@ async function main() {
 	app.post('/api/user' , express .json(), async (req, res) =>
 		{
 			const name = req.body.name;
-			if (!name) {
-				res.status (400).send('Bad Request' );
-				return ;
-			}
-			if (typeof name !== 'string') {
-				res.status(400).send('Not String');
-				return;
-			}
-			await db.collection ('user' ).insertOne ({ name : name });
-			res.status (200).send('Created' );
+			const { status, body } = await insertUser(name, db);
+			res.status(status).send(body);
 		});
 
 	app.listen(3000, () => {
