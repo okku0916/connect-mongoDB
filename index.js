@@ -4,7 +4,7 @@ const path = require('path');
 const { MongoClient } = require('mongodb' );
 const client = new
 	MongoClient ('mongodb://localhost:27017' );
-const { insertUser } = require('./user.js');
+const { insertUser, getUsers } = require('./user.js');
 
 const app = express();
 
@@ -19,9 +19,7 @@ async function main() {
 	const db = client.db('my-app' );
 
 	app.get('/', async (req, res) => {
-		// dbから取ってくるとオブジェクトで返ってくるからnamesという配列にする
-		const users = await db.collection('user').find().toArray();
-		const names = users.map((user) => { return user.name });
+		const names = await getUsers(db);
 		res.render(path.join(__dirname, 'views','index.ejs'), { users: names });
 	});
 
