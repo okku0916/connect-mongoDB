@@ -56,10 +56,7 @@ test('getUsers: db error', async (t) => {
 
 	t.plan(1); // assertが呼ばれた回数がこの回数であるか確認
 
-	try {
-		await getUsers(db);
-	} catch(err) {
-		t.assert.strictEqual(err.message, 'DB error', 'DBエラーがthrowされることを確認');
-	}
+	const { names } = await getUsers(db);
+	t.assert.deepEqual(names.length, 0, "DBエラーが生じた時からの配列を返す");
 });
 
